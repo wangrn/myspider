@@ -8,8 +8,14 @@ import lxml.etree as etree
 import utils_xml
 import utils_text
 
-def fetch_html_page(url, page_coding='utf-8', parsed=True):
-    page_content = urllib2.urlopen(url).read()
+
+def fetch_html_page(url, page_coding='utf-8', parsed=True, headers=dict()):
+    req = urllib2.Request(url)
+    for key, value in headers.items():
+        req.add_header(key, value)
+    res = urllib2.urlopen(req)
+    page_content = res.read()
+    #page_content = urllib2.urlopen(url).read()
     if not parsed:
         return page_content
     if page_content:
@@ -47,7 +53,7 @@ def get_data_from_dom(dom, xpath, attr=None):
         return None
     item_dom = dom.xpath(xpath)
     if not item_dom:
-        print 'error'
+        #print 'error'
         return None
     else:
         if not attr:
